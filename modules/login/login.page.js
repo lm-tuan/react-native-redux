@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Container,
   Header,
@@ -28,28 +28,42 @@ export default function Login({navigation}) {
     password: '',
   });
 
+  useEffect(() => {
+    setLoading(false);
+    setAccount({...account, username : '', password: ''});
+  }, []);
+
   const onRegister = () => {
     navigation.navigate('Register');
   };
   const onLogin = () => {
-    if (account.username === '' && account.password === '') {
-      Alert.alert('Enter details to signup!');
+    setLoading(true);
+    if (account.username === '' || account.password === '') {
+      setTimeout(() => {
+        setLoading(false);
+      Alert.alert('Username and password incorrect please try again ?');
+      }, 400)
     } else {
-      // setLoading(true);
       // console.log('login');
       firebase
         .auth()
         .signInWithEmailAndPassword(account.username, account.password)
         .then(res => {
-          // console.log('loging.........................');
           if (res) {
-            // setAccount({...account, username : '', password: ''})
+            setLoading(false);
+            setAccount({...account, username : '', password: ''})
             navigation.navigate('Dashboard');
           }
         })
-        .catch(error => console.log('error', error));
+        .catch(error => {
+          if(error){
+            setTimeout(() => {
+              setLoading(false);
+            Alert.alert('Username and password incorrect please try again ?');
+            }, 400)
+          }
+        });
     }
-    // setAccount({...account, username : '', password: ''})
   };
 
   return (
@@ -84,6 +98,7 @@ export default function Login({navigation}) {
                       setAccount({...account, username})
                     }
                     value={account.username}
+                    autoFocus={true}
                   />
                 </Item>
                 <Item floatingLabel last>
@@ -93,6 +108,7 @@ export default function Login({navigation}) {
                       setAccount({...account, password})
                     }
                     value={account.password}
+                    secureTextEntry = { true }
                   />
                 </Item>
               </Form>

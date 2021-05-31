@@ -14,12 +14,9 @@ export default function Dashboard({navigation}) {
   };
 
   useEffect(() => {
-    console.log('firebase.auth().currentUser', firebase.auth().currentUser)
-    // console.log('firebase', firebase);
     setDisplayEmail(firebase.auth().currentUser.email);
     setUid(firebase.auth().currentUser.uid);
   }, []);
-  // console.log('firebase', firebase);
   return (
     <View style={styles.container}>
       <Text style={styles.textStyle}>Email:{displayEmail}</Text>
