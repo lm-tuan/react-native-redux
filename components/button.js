@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, View } from  'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as actions from '../modules/count/count.action';
+import { firebase } from '../firebase/config';
 
 export default function ButtonComponent(){
 
@@ -12,6 +13,7 @@ export default function ButtonComponent(){
     // increase
     const onIncrease= () => {
         dispatch(actions.inCrease(countState.count.number + 1));
+        console.log(firebase);
     }
     // reduces
     const onReduce= () => {
