@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Container,
   Header,
@@ -15,36 +15,68 @@ import {
   Text,
   Button,
   View,
+  Toast
 } from 'native-base';
 import {firebase} from '../../firebase/config';
+import { validateEmail } from '../../helper/regex';
 import { Alert } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import * as actions from '../registration/register.action';
 
 export default function Register({navigation}) {
   const [account, setAccount] = useState({
     username: '',
     password: '',
     fullname: '',
+    confimPassword:''
   });
+  const dispatch = useDispatch();
+  const registerState = useSelector(state => state);
+
   const onBackLogin = () => {
-    console.log('onBackLogin', navigation);
     navigation.navigate('LoginPage');
   };
-  const onRegister = () => {
-    if (account.username === '' && account.password === '') {
-      Alert.alert('Enter details to signup!');
-    } else {
-      // setLoading(true);
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(account.username, account.password)
-        .then((res) => {
-          if(res.additionalUserInfo.isNewUser){
-            // Alert.alert('signup susscess');
-            navigation.navigate('LoginPage');
-          }
-        })
-        .catch(error => console.log('error', error));
+  useEffect(() => {
+    // console.log('registerState', registerState);
+    const user = {
+      username: 'tuanle050@gmail.com',
+      password: '123456',
+      fullname: 'abd',
+      confimPassword:'123456'
     }
+    dispatch(actions.registerRequest({
+      user
+    }));
+  }, [])
+  const onRegister = () => {
+    if (account.username === '' || account.password === '') {
+      Alert.alert('Enter details to signup!');
+    } 
+    if( validateEmail(account.username)){
+      if(account.password !== account.confimPassword){
+        Alert.alert('Comfirm password incorrect with password.Pls retry !');
+      }else {
+        // firebase
+        // .auth()
+        // .createUserWithEmailAndPassword(account.username, account.password)
+        // .then((res) => {
+        //   if(res.additionalUserInfo.isNewUser){
+        //     res.user.updateProfile({
+        //       displayName: account.fullname
+        //     })
+        //     navigation.navigate('LoginPage');
+        //   }
+        // })
+        // .catch(error => {
+        //   Alert.alert(error.toString());
+        // });
+        // dispatch(actions.registerRequest(account));
+      }
+    }else {
+      //  not format email
+      Alert.alert('Address email is incorrect.Pls retry !');
+    }
+      // setLoading(true);
   };
 
   return (
@@ -77,7 +109,7 @@ export default function Register({navigation}) {
                 />
               </Item>
               <Item floatingLabel>
-                <Label>Username</Label>
+                <Label>Email</Label>
                 <Input
                   onChangeText={username => setAccount({...account, username})}
                 />
@@ -86,6 +118,14 @@ export default function Register({navigation}) {
                 <Label>Password</Label>
                 <Input
                   onChangeText={password => setAccount({...account, password})}
+                  secureTextEntry = { true }
+                />
+              </Item>
+              <Item floatingLabel last>
+                <Label>Comfirm Password</Label>
+                <Input
+                  onChangeText={confimPassword => setAccount({...account, confimPassword})}
+                  secureTextEntry = { true }
                 />
               </Item>
             </Form>

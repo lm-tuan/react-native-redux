@@ -1,4 +1,7 @@
 import React, {useEffect, useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as actions from '../login/login.action';
+
 import {
   Container,
   Header,
@@ -16,6 +19,7 @@ import {
   Text,
   Button,
   View,
+  Icon
 } from 'native-base';
 import {firebase} from './../../firebase/config';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -27,6 +31,8 @@ export default function Login({navigation}) {
     username: '',
     password: '',
   });
+  const dispatch = useDispatch();
+  const loginState = useSelector(state => state.login);
 
   useEffect(() => {
     setLoading(false);
@@ -36,33 +42,41 @@ export default function Login({navigation}) {
   const onRegister = () => {
     navigation.navigate('Register');
   };
+  
+  useEffect(() => {
+     console.log('login', loginState);
+      if(loginState.isLogin){
+        navigation.navigate('Dashboard');
+      }
+  }, [loginState])
   const onLogin = () => {
-    setLoading(true);
+    // setLoading(true);
     if (account.username === '' || account.password === '') {
       setTimeout(() => {
-        setLoading(false);
+        // setLoading(false);
       Alert.alert('Username and password incorrect please try again ?');
       }, 400)
     } else {
-      // console.log('login');
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(account.username, account.password)
-        .then(res => {
-          if (res) {
-            setLoading(false);
-            setAccount({...account, username : '', password: ''})
-            navigation.navigate('Dashboard');
-          }
-        })
-        .catch(error => {
-          if(error){
-            setTimeout(() => {
-              setLoading(false);
-            Alert.alert('Username and password incorrect please try again ?');
-            }, 400)
-          }
-        });
+      dispatch(actions.loginRequest(account)); 
+      // firebase
+      //   .auth()
+      //   .signInWithEmailAndPassword(account.username, account.password)
+      //   .then(res => {
+      //     if (res) {
+      //       setLoading(false);
+      //       setAccount({...account, username : '', password: ''})
+      //       navigation.navigate('Dashboard');
+      //     }
+      //   })
+      //   .catch(error => {
+      //     if(error){
+      //       setTimeout(() => {
+      //         setLoading(false);
+      //       Alert.alert('Username and password incorrect please try again ?');
+      //       }, 400)
+      //     }
+      //   });
+     
     }
   };
 
@@ -92,7 +106,7 @@ export default function Login({navigation}) {
             <Content>
               <Form>
                 <Item floatingLabel>
-                  <Label>Username</Label>
+                  <Label>Email</Label>
                   <Input
                     onChangeText={username =>
                       setAccount({...account, username})
