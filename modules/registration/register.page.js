@@ -31,23 +31,17 @@ export default function Register({navigation}) {
     confimPassword:''
   });
   const dispatch = useDispatch();
-  const registerState = useSelector(state => state);
+  const registerState = useSelector(state => state.registration);
 
   const onBackLogin = () => {
     navigation.navigate('LoginPage');
   };
   useEffect(() => {
-    // console.log('registerState', registerState);
-    const user = {
-      username: 'tuanle050@gmail.com',
-      password: '123456',
-      fullname: 'abd',
-      confimPassword:'123456'
+    console.log('props', registerState)
+    if(registerState.isRegister){
+      navigation.navigate('LoginPage');
     }
-    dispatch(actions.registerRequest({
-      user
-    }));
-  }, [])
+  }, [registerState])
   const onRegister = () => {
     if (account.username === '' || account.password === '') {
       Alert.alert('Enter details to signup!');
@@ -56,6 +50,7 @@ export default function Register({navigation}) {
       if(account.password !== account.confimPassword){
         Alert.alert('Comfirm password incorrect with password.Pls retry !');
       }else {
+        dispatch(actions.registerRequest(account));
         // firebase
         // .auth()
         // .createUserWithEmailAndPassword(account.username, account.password)

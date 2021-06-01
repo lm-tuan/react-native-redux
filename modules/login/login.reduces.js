@@ -1,5 +1,6 @@
 
 import * as types from './login.type';
+import { clearStorage } from './../../helper/storage'; 
 
 const initialState = {
     isLogin: false,
@@ -17,6 +18,7 @@ const loginReducer = (state = initialState, action) => {
     case types.FAIL_LOGIN:
         return { ...state, isLogin: false, uiid : "", messageError:action.error, isLogout:false };
     case types.LOGOUT:
+        clearStorage();
         return { ...state, isLogin: false, uiid : "", messageError:"", isLogout:false  };
     default:
       return state;

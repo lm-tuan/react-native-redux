@@ -11,14 +11,11 @@ const initialState = {
 const registerReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.REQUEST_REGISTER:
-      // console.log('REQUEST_REGISTER', action);
       return { ...state };
     case types.SUSCCESS_REGISTER:
-        console.log('SUSCCESS_REGISTER-REDUCES', action);
-        return { ...state };
+        return { ...state, displayName : action.displayName, uiId: action.uiId, messageError:"", isRegister:true };
     case types.FAIL_REGISTER:
-        // console.log('FAIL_REGISTER', action);
-        return { ...state };
+      return { ...state, displayName : "", uiId: "", messageError:"", isRegister:false };
     default:
       return state;
   }

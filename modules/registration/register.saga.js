@@ -7,8 +7,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export function* register(action) {
   try {
-    const { username, password, fullname } = action.account.user;
-    let uiId;
+    const { username, password } = action.account;
+    const displayName = action.account.fullname;
+    let uiid;
     yield firebase
         .auth()
         .createUserWithEmailAndPassword(username,password)
@@ -17,15 +18,13 @@ export function* register(action) {
             res.user.updateProfile({
               displayName: action.account.fullname
             })
-            console.log('res', res.user.apiKey);
-            uiId =  res.user.apiKey
+            uiid =  res.user.l
           };
       })
-    console.log('uiId', uiId)
-    // yield put(actions.registerSuccess({
-    //   uiid: uiId,
-    //   displayName: fullname
-    // }))
+    yield put(actions.registerSuccess(
+      uiid,
+      displayName
+    ))
   } catch (error) {
     console.log('error', error);
     yield put(actions.registerFail(error.toString()));
