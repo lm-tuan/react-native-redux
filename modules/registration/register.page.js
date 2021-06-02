@@ -51,21 +51,6 @@ export default function Register({navigation}) {
         Alert.alert('Comfirm password incorrect with password.Pls retry !');
       }else {
         dispatch(actions.registerRequest(account));
-        // firebase
-        // .auth()
-        // .createUserWithEmailAndPassword(account.username, account.password)
-        // .then((res) => {
-        //   if(res.additionalUserInfo.isNewUser){
-        //     res.user.updateProfile({
-        //       displayName: account.fullname
-        //     })
-        //     navigation.navigate('LoginPage');
-        //   }
-        // })
-        // .catch(error => {
-        //   Alert.alert(error.toString());
-        // });
-        // dispatch(actions.registerRequest(account));
       }
     }else {
       //  not format email

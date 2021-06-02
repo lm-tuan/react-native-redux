@@ -44,39 +44,21 @@ export default function Login({navigation}) {
   };
   
   useEffect(() => {
-     console.log('login', loginState);
       if(loginState.isLogin){
         navigation.navigate('Dashboard');
       }
+      setAccount({...account, username : '', password: ''})
+      // setLoading(false);
   }, [loginState])
   const onLogin = () => {
     // setLoading(true);
     if (account.username === '' || account.password === '') {
       setTimeout(() => {
-        // setLoading(false);
+      // setLoading(false);
       Alert.alert('Username and password incorrect please try again ?');
       }, 400)
     } else {
       dispatch(actions.loginRequest(account)); 
-      // firebase
-      //   .auth()
-      //   .signInWithEmailAndPassword(account.username, account.password)
-      //   .then(res => {
-      //     if (res) {
-      //       setLoading(false);
-      //       setAccount({...account, username : '', password: ''})
-      //       navigation.navigate('Dashboard');
-      //     }
-      //   })
-      //   .catch(error => {
-      //     if(error){
-      //       setTimeout(() => {
-      //         setLoading(false);
-      //       Alert.alert('Username and password incorrect please try again ?');
-      //       }, 400)
-      //     }
-      //   });
-     
     }
   };
 
